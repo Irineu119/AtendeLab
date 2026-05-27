@@ -1,4 +1,7 @@
-CREATE TABLE usuarios(
+CREATE DATABASE IF NOT EXISTS atendelab;
+USE atendelab;
+
+CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -8,22 +11,23 @@ CREATE TABLE usuarios(
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE pessoas(
+CREATE TABLE IF NOT EXISTS pessoas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(20) NOT NULL UNIQUE
 );
 
-CREATE TABLE tipos_atendimentos(
+CREATE TABLE IF NOT EXISTS tipos_atendimentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    tipo VARCHAR(100) NOT NULL
+    tipo VARCHAR(30) NOT NULL UNIQUE
 );
 
-CREATE TABLE atendimentos(
+CREATE TABLE IF NOT EXISTS atendimentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    FOREIGN KEY usuario_id REFERENCES usuarios(id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     pessoa_id INT NOT NULL,
-    FOREIGN KEY pessoa_id REFERENCES pessoas(id),
+    FOREIGN KEY (pessoa_id) REFERENCES pessoas(id),
     tipos_atendimento_id INT NOT NULL,
-    FOREIGN KEY tipos_atendimento_id REFERENCES tipos_atendimentos(id)
+    FOREIGN KEY (tipos_atendimento_id) REFERENCES tipos_atendimentos(id)
 );
