@@ -3,7 +3,7 @@
 require_once __DIR__ . "/app/Controllers/UsuarioController.php";
 
 $controller = $_GET["controller"] ?? "home";
-$action = $GET["action"] ?? "index";
+$action = $_GET["action"] ?? "index";
 
 if ($controller === "usuarios")
 {
@@ -32,7 +32,7 @@ if ($controller === "usuarios")
             break;
 
         default:
-            echo "Ação de usuários não encontrada.";
+            echo "Ação \"$action\" de usuários não encontrada.";
             break;
     }
 }

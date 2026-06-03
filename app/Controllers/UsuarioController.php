@@ -33,7 +33,7 @@ class UsuariosController
         if (!$id)
         {
             http_response_code(400);
-            echo json_encode(["erro" => "ID inválido."]);
+            echo json_encode(["erro" => "ID inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -50,7 +50,7 @@ class UsuariosController
         if (!$usuario)
         {
             http_response_code(404);
-            echo json_encode(["erro" => "Usuário não encontrado."]);
+            echo json_encode(["erro" => "Usuário não encontrado."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -70,28 +70,28 @@ class UsuariosController
         if ($nome === "" || $email === "" || $senha === "")
         {
             http_response_code(400);
-            echo json_encode(["erro" => "Nome, e-mail e senha são obrigatórios."]);
+            echo json_encode(["erro" => "Nome, e-mail e senha são obrigatórios."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
             http_response_code(400);
-            echo json_encode(["erro" => "E-mail inválido."]);
+            echo json_encode(["erro" => "E-mail inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
         if (!in_array($perfil, ["admin", "atendente", "aluno"], true))
         {
             http_response_code(400);
-            echo json_encode(["erro" => "Perfil inválido."]);
+            echo json_encode(["erro" => "Perfil inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
         if (!in_array($status, ["ativo", "inativo"], true))
         {
             http_response_code(400);
-            echo json_encode(["erro" => "Status inválido."]);
+            echo json_encode(["erro" => "Status inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -119,7 +119,7 @@ class UsuariosController
         catch (PDOException $e)
         {
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao cadastrar usuário."]);
+            echo json_encode(["erro" => "Erro ao cadastrar usuário."], JSON_UNESCAPED_UNICODE);
         }
     }
 
@@ -136,28 +136,28 @@ class UsuariosController
         if ($nome === "" || $email === "" || $senha === "")
         {
             http_response_code(400);
-            echo json_encode(["erro" => "Nome, e-mail e senha são obrigatórios."]);
+            echo json_encode(["erro" => "Nome, e-mail e senha são obrigatórios."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
             http_response_code(400);
-            echo json_encode(["erro" => "E-mail inválido."]);
+            echo json_encode(["erro" => "E-mail inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
         if (!in_array($perfil, ["admin", "atendente", "aluno"], true))
         {
             http_response_code(400);
-            echo json_encode(["erro" => "Perfil inválido."]);
+            echo json_encode(["erro" => "Perfil inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
         if (!in_array($status, ["ativo", "inativo"], true))
         {
             http_response_code(400);
-            echo json_encode(["erro" => "Status inválido."]);
+            echo json_encode(["erro" => "Status inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -183,7 +183,7 @@ class UsuariosController
         catch (PDOException $e)
         {
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao atualizar usuário."]);
+            echo json_encode(["erro" => "Erro ao atualizar usuário."], JSON_UNESCAPED_UNICODE);
         }
     }
 
@@ -196,7 +196,7 @@ class UsuariosController
         if (!$id)
         {
             http_response_code(400);
-            echo json_encode(["erro" => "ID inválido."]);
+            echo json_encode(["erro" => "ID inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -212,7 +212,7 @@ class UsuariosController
         catch (PDOException $e)
         {
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao excluir usuário."]);
+            echo json_encode(["erro" => "Erro ao excluir usuário."], JSON_UNESCAPED_UNICODE);
         }
     }
 }
