@@ -1,38 +1,53 @@
 <?php
 
 require_once __DIR__ . "/app/Controllers/UsuarioController.php";
+require_once __DIR__ . "/app/Controllers/PessoasController.php";
 
-$controller = $_GET["controller"] ?? "home";
+$controllerName = $_GET["controller"] ?? "home";
 $action = $_GET["action"] ?? "index";
+$controller = null;
 
-if ($controller === "usuarios")
+switch ($controllerName)
 {
-    $usuariosController = new UsuariosController();
+    case "usuarios":
+        $controller = new UsuariosController();
+        break;
+    
+    case "pessoas":
+        $controller = new PessoasController();
+        break;
 
+    default:
+        $controller = null;
+        break;
+}
+
+if ($controller !== null)
+{
     switch ($action)
     {
         case "listar":
-            $usuariosController->listar();
+            $controller->listar();
             break;
 
         case "buscar":
-            $usuariosController->buscarPorId();
+            $controller->buscarPorId();
             break;
 
         case "criar":
-            $usuariosController->criar();
+            $controller->criar();
             break;
 
         case "atualizar":
-            $usuariosController->atualizar();
+            $controller->atualizar();
             break;
 
         case "excluir":
-            $usuariosController->excluir();
+            $controller->excluir();
             break;
 
         default:
-            echo "Ação \"$action\" de usuários não encontrada.";
+            echo "Ação \"$action\" de \"$controllerName\" não encontrada.";
             break;
     }
 }

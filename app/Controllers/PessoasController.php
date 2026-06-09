@@ -1,6 +1,6 @@
 <?php
 
-class UsuariosController
+class PessoasController
 {
     private PDO $pdo;
 
@@ -14,14 +14,14 @@ class UsuariosController
     {
         header("Content-Type: application/json; charset=utf-8");
 
-        $sql = "SELECT id, nome, email, perfil, status, criado_em
-                FROM usuarios
+        $sql = "SELECT id, nome, cpf
+                FROM pessoas
                 ORDER BY id DESC";
         
         $stmt = $this->pdo->query($sql);
-        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pessoas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo json_encode($usuarios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        echo json_encode($pessoas, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 
     public function buscarPorId(): void
@@ -37,24 +37,24 @@ class UsuariosController
             return;
         }
 
-        $sql = "SELECT id, nome, email, perfil, status, criado_em
-                FROM usuarios
+        $sql = "SELECT id, nome, cpf
+                FROM pessoas
                 WHERE id = :id";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        $pessoa = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$usuario)
+        if (!$pessoa)
         {
             http_response_code(404);
-            echo json_encode(["erro" => "Usuário não encontrado."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["erro" => "Pessoa não encontrado."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
-        echo json_encode($usuario, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        echo json_encode($pessoa, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 
     public function criar(): void
@@ -63,14 +63,12 @@ class UsuariosController
 
         $nome = trim($_POST["nome"] ?? "");
         $email = trim($_POST["email"] ?? "");
-        $senha = $_POST["senha"] ?? "";
-        $perfil = $_POST["perfil"] ?? "atendente";
-        $status = $_POST["status"] ?? "ativo";
+        $cpf = trim($_POST["cpf"] ?? "");
 
-        if ($nome === "" || $email === "" || $senha === "")
+        if ($nome === "" || $email === "" || $cpf === "")
         {
             http_response_code(400);
-            echo json_encode(["erro" => "Nome, e-mail e senha são obrigatórios."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["erro" => "Nome, e-mail e CPF são obrigatórios."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -81,45 +79,27 @@ class UsuariosController
             return;
         }
 
-        if (!in_array($perfil, ["admin", "atendente", "aluno"], true))
-        {
-            http_response_code(400);
-            echo json_encode(["erro" => "Perfil inválido."], JSON_UNESCAPED_UNICODE);
-            return;
-        }
-
-        if (!in_array($status, ["ativo", "inativo"], true))
-        {
-            http_response_code(400);
-            echo json_encode(["erro" => "Status inválido."], JSON_UNESCAPED_UNICODE);
-            return;
-        }
-
-        $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
         try
         {
-            $sql = "INSERT INTO usuarios (nome, email, senha, perfil, status)
-                    VALUES (:nome, :email, :senha, :perfil, :status)";
+            $sql = "INSERT INTO pessoas (nome, email, cpf)
+                    VALUES (:nome, :email, :cpf)";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(":nome", $nome);
             $stmt->bindValue(":email", $email);
-            $stmt->bindValue(":senha", $senha);
-            $stmt->bindValue(":perfil", $perfil);
-            $stmt->bindValue(":status", $status);
+            $stmt->bindValue(":cpf", $cpf);
             $stmt->execute();
 
             http_response_code(201);
             echo json_encode([
-                "mensagem" => "Usuário cadastrado com sucesso.",
+                "mensagem" => "Pessoa cadastrado com sucesso.",
                 "id" => $this->pdo->lastInsertId()
             ], JSON_UNESCAPED_UNICODE);
         }
         catch (PDOException $e)
         {
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao cadastrar usuário."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["erro" => "Erro ao cadastrar pessoa."], JSON_UNESCAPED_UNICODE);
         }
     }
 
@@ -130,8 +110,7 @@ class UsuariosController
         $id = filter_input(INPUT_POST, "id", FILTER_VALIDATE_INT);
         $nome = trim($_POST["nome"] ?? "");
         $email = trim($_POST["email"] ?? "");
-        $perfil = $_POST["perfil"] ?? "";
-        $status = $_POST["status"] ?? "";
+        $cpf = trim($_POST["cpf"] ?? "");
 
         if (!$id || $nome === "" || $email === "")
         {
@@ -147,43 +126,27 @@ class UsuariosController
             return;
         }
 
-        if (!in_array($perfil, ["admin", "atendente", "aluno"], true))
-        {
-            http_response_code(400);
-            echo json_encode(["erro" => "Perfil inválido."], JSON_UNESCAPED_UNICODE);
-            return;
-        }
-
-        if (!in_array($status, ["ativo", "inativo"], true))
-        {
-            http_response_code(400);
-            echo json_encode(["erro" => "Status inválido."], JSON_UNESCAPED_UNICODE);
-            return;
-        }
-
         try
         {
-            $sql = "UPDATE usuarios
+            $sql = "UPDATE pessoas
                     SET nome = :nome,
                         email = :email,
-                        perfil = :perfil,
-                        status = :status
+                        cpf = :cpf
                     WHERE id = :id";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(":nome", $nome);
             $stmt->bindValue(":email", $email);
-            $stmt->bindValue(":perfil", $perfil);
-            $stmt->bindValue(":status", $status);
+            $stmt->bindValue(":cpf", $cpf);
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            echo json_encode(["mensagem" => "Usuário atualizado com sucesso."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["mensagem" => "Pessoa atualizada com sucesso."], JSON_UNESCAPED_UNICODE);
         }
         catch (PDOException $e)
         {
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao atualizar usuário."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["erro" => "Erro ao atualizar pessoa."], JSON_UNESCAPED_UNICODE);
         }
     }
 
@@ -202,17 +165,17 @@ class UsuariosController
 
         try
         {
-            $sql = "DELETE FROM usuarios WHERE id = :id";
+            $sql = "DELETE FROM pessoas WHERE id = :id";
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            echo json_encode(["mensagem" => "Usuário excluído com sucesso."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["mensagem" => "Pessoa excluída com sucesso."], JSON_UNESCAPED_UNICODE);
         }
         catch (PDOException $e)
         {
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao excluir usuário."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["erro" => "Erro ao excluir pessoa."], JSON_UNESCAPED_UNICODE);
         }
     }
 }
