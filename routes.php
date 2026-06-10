@@ -2,9 +2,10 @@
 
 require_once __DIR__ . "/app/Controllers/UsuarioController.php";
 require_once __DIR__ . "/app/Controllers/PessoasController.php";
+require_once __DIR__ . "/app/Controllers/AuthController.php";
 
-$controllerName = $_GET["controller"] ?? "home";
-$action = $_GET["action"] ?? "index";
+$controllerName = $_GET["controller"] ?? "auth";
+$action = $_GET["action"] ?? "login";
 $controller = null;
 
 switch ($controllerName)
@@ -16,6 +17,10 @@ switch ($controllerName)
     case "pessoas":
         $controller = new PessoasController();
         break;
+    
+    case "auth":
+        $controller = new AuthController();
+        break;
 
     default:
         $controller = null;
@@ -24,32 +29,10 @@ switch ($controllerName)
 
 if ($controller !== null)
 {
-    switch ($action)
-    {
-        case "listar":
-            $controller->listar();
-            break;
-
-        case "buscar":
-            $controller->buscarPorId();
-            break;
-
-        case "criar":
-            $controller->criar();
-            break;
-
-        case "atualizar":
-            $controller->atualizar();
-            break;
-
-        case "excluir":
-            $controller->excluir();
-            break;
-
-        default:
-            echo "Ação \"$action\" de \"$controllerName\" não encontrada.";
-            break;
-    }
+    if (method_exists($controller, $action))
+        $controller->$action();
+    else
+        echo "Ação \"$action\" de \"$controllerName\" não encontrada.";
 }
 else
 {

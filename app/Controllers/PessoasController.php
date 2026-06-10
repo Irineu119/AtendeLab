@@ -50,7 +50,7 @@ class PessoasController
         if (!$pessoa)
         {
             http_response_code(404);
-            echo json_encode(["erro" => "Pessoa não encontrado."], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["erro" => "Pessoa não encontrada."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -92,7 +92,7 @@ class PessoasController
 
             http_response_code(201);
             echo json_encode([
-                "mensagem" => "Pessoa cadastrado com sucesso.",
+                "mensagem" => "Pessoa cadastrada com sucesso.",
                 "id" => $this->pdo->lastInsertId()
             ], JSON_UNESCAPED_UNICODE);
         }
