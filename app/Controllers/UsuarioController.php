@@ -105,7 +105,7 @@ class UsuariosController
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(":nome", $nome);
             $stmt->bindValue(":email", $email);
-            $stmt->bindValue(":senha", $senha);
+            $stmt->bindValue(":senha", $senhaHash);
             $stmt->bindValue(":perfil", $perfil);
             $stmt->bindValue(":status", $status);
             $stmt->execute();

@@ -97,7 +97,7 @@ class AuthController
 
     public function logout(): void
     {
-        $_SERVER = [];
+        $_SESSION = [];
 
         if (ini_get("session.use_cookies"))
         {

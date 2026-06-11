@@ -21,7 +21,7 @@
                             Informe suas credenciais para acessar o sistema.
                         </p>
 
-                        <?php if (!empty($error)): ?>
+                        <?php if (!empty($erro)): ?>
                             <div class="alert alert-danger">
                                 <?= htmlspecialchars(
                                     $erro,
