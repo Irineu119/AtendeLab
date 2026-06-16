@@ -3,6 +3,7 @@
 require_once __DIR__ . "/app/Controllers/UsuarioController.php";
 require_once __DIR__ . "/app/Controllers/PessoasController.php";
 require_once __DIR__ . "/app/Controllers/AuthController.php";
+require_once __DIR__ . "/app/Controllers/TipoAtendimentos.php";
 
 $controllerName = $_GET["controller"] ?? "auth";
 $action = $_GET["action"] ?? "login";
@@ -20,6 +21,10 @@ switch ($controllerName)
     
     case "auth":
         $controller = new AuthController();
+        break;
+
+    case "tipos":
+        $controller = new TipoAtendimentosController();
         break;
 
     default:
