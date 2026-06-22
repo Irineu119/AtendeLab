@@ -16,6 +16,7 @@ class UsuariosController
 
         $sql = "SELECT id, nome, email, perfil, status, criado_em
                 FROM usuarios
+				WHERE status != 'inativo'
                 ORDER BY id DESC";
         
         $stmt = $this->pdo->query($sql);
@@ -39,7 +40,8 @@ class UsuariosController
 
         $sql = "SELECT id, nome, email, perfil, status, criado_em
                 FROM usuarios
-                WHERE id = :id";
+                WHERE id = :id
+				AND status != 'inativo'";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
@@ -202,7 +204,7 @@ class UsuariosController
 
         try
         {
-            $sql = "DELETE FROM usuarios WHERE id = :id";
+            $sql = "UPDATE usuarios SET status = 'inativo' WHERE id = :id";
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->execute();

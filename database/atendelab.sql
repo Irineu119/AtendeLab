@@ -15,16 +15,21 @@ CREATE TABLE IF NOT EXISTS pessoas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(20) NOT NULL UNIQUE,
-    email VARCHAR(80) NOT NULL UNIQUE
+    email VARCHAR(80) NOT NULL UNIQUE,
+	status ENUM('ativo', 'inativo') DEFAULT 'ativo'
 );
 
 CREATE TABLE IF NOT EXISTS tipos_atendimentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    tipo VARCHAR(30) NOT NULL UNIQUE
+    tipo VARCHAR(30) NOT NULL UNIQUE,
+	status ENUM('ativo', 'inativo') DEFAULT 'ativo'
 );
 
 CREATE TABLE IF NOT EXISTS atendimentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
+	status ENUM('ativo', 'inativo') DEFAULT 'ativo',
+	status2 ENUM('nao iniciado', 'em andamento', 'concluido') DEFAULT 'nao iniciado',
+	observacao_final VARCHAR(255),
     usuario_id INT NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     pessoa_id INT NOT NULL,

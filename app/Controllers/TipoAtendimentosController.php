@@ -16,6 +16,7 @@ class TipoAtendimentosController
 
         $sql = "SELECT id, tipo
                 FROM tipos_atendimentos
+				WHERE status != 'inativo'
                 ORDER BY id DESC";
         
         $stmt = $this->pdo->query($sql);
@@ -39,7 +40,8 @@ class TipoAtendimentosController
 
         $sql = "SELECT id, tipo
                 FROM tipos_atendimentos
-                WHERE id = :id";
+                WHERE id = :id
+				AND status != 'inativo'";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
@@ -62,11 +64,19 @@ class TipoAtendimentosController
         header("Content-Type: application/json; charset=utf-8");
 
         $tipo = $_POST["tipo"] ?? "";
+		$status = $_POST["status"] ?? "ativo";
 
         if ($tipo === "")
         {
             http_response_code(400);
             echo json_encode(["erro" => "Tipo de atendimento é obrigatório."]);
+            return;
+        }
+
+		if (!in_array($status, ["ativo", "inativo"], true))
+        {
+            http_response_code(400);
+            echo json_encode(["erro" => "Status inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -98,11 +108,19 @@ class TipoAtendimentosController
 
         $id = filter_input(INPUT_POST, "id", FILTER_VALIDATE_INT);
         $tipo = $_POST["tipo"];
+		$status = $_POST["status"] ?? "ativo";
 
         if (!$id || $tipo === "")
         {
             http_response_code(400);
             echo json_encode(["erro" => "ID e tipo são obrigatórios."], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+		if (!in_array($status, ["ativo", "inativo"], true))
+        {
+            http_response_code(400);
+            echo json_encode(["erro" => "Status inválido."], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -141,7 +159,7 @@ class TipoAtendimentosController
 
         try
         {
-            $sql = "DELETE FROM tipos_atendimentos WHERE id = :id";
+            $sql = "UPDATE tipos_atendimentos SET status = 'inativo' WHERE id = :id";
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
